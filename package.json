@@ -4,8 +4,9 @@
   "description": "My personal website",
   "main": "src/app.js",
   "scripts": {
+    "lint": "eslint . --ext .js --ext .json",
     "dev": "node src/app.js",
-    "test": "jest"
+    "test": "yarn lint && jest"
   },
   "author": "Brady Davis",
   "license": "ISC",
@@ -15,6 +16,8 @@
   },
   "devDependencies": {
     "chance": "^1.1.8",
+    "eslint": "^7.32.0",
+    "eslint-config-get-off-my-lawn": "^6.0.3",
     "jest": "^27.2.0"
   }
 }
