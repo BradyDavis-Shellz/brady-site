@@ -1,4 +1,5 @@
 const http = require('http');
+
 const Chance = require('chance');
 
 jest.mock('http');
@@ -8,12 +9,17 @@ const chance = new Chance();
 describe('app', () => {
     const hostName = '127.0.0.1';
     const port = 3000;
-    let fakeServer, actualServer, log;
+
+    let fakeServer,
+        // eslint-disable-next-line no-unused-vars
+        log;
 
     beforeAll(async () => {
-        const log = console.log;
+        /* eslint-disable no-console */
+        log = console.log;
 
         console.log = jest.fn();
+        /* eslint-enable no-console */
 
         fakeServer = {
             listen: jest.fn()
@@ -21,7 +27,7 @@ describe('app', () => {
 
         http.createServer.mockReturnValue(fakeServer);
 
-        actualServer = await require('../src/app');
+        await require('../src/app');
     });
 
     test('should create server', () => {
@@ -31,9 +37,9 @@ describe('app', () => {
 
     test('server should handle default response', () => {
         const fakeResponse = {
-            statusCode: chance.natural(),
+            end: jest.fn(),
             setHeader: jest.fn(),
-            end: jest.fn()
+            statusCode: chance.natural()
         };
 
         http.createServer.mock.calls[0][0]({}, fakeResponse);
@@ -43,7 +49,7 @@ describe('app', () => {
         expect(fakeResponse.setHeader).toHaveBeenCalledWith('Content-Type', 'text/plain');
         expect(fakeResponse.end).toHaveBeenCalledTimes(1);
         expect(fakeResponse.end).toHaveBeenCalledWith('Hello World');
-    })
+    });
 
     describe('server', () => {
         test('should listen on port', () => {
@@ -54,10 +60,10 @@ describe('app', () => {
         test('should log listening at port', () => {
             fakeServer.listen.mock.calls[0][2]();
 
+            /* eslint-disable no-console */
             expect(console.log).toHaveBeenCalledTimes(1);
-            expect(console.log).toHaveBeenCalledWith(`Server running at http://${hostName}:${port}/`)
+            expect(console.log).toHaveBeenCalledWith(`Server running at http://${hostName}:${port}/`);
+            /* eslint-enable no-console */
         });
     });
-
-
 });
